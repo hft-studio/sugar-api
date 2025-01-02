@@ -1,50 +1,25 @@
-FROM python:3.10-slim as python-base
+# Use the official Python image from the Docker Hub
+FROM python:3.10-slim
 
-ENV PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1 \
-    PIP_NO_CACHE_DIR=off \
-    PIP_DISABLE_PIP_VERSION_CHECK=on \
-    PIP_DEFAULT_TIMEOUT=100 \
-    POETRY_HOME="/opt/poetry" \
-    POETRY_VIRTUALENVS_IN_PROJECT=true \
-    POETRY_NO_INTERACTION=1 \
-    PYSETUP_PATH="/opt/pysetup" \
-    VENV_PATH="/opt/pysetup/.venv"
-ENV PATH="$POETRY_HOME/bin:$VENV_PATH/bin:$PATH"
-
-FROM python-base as builder-base
-
-RUN apt-get update \
-    && apt-get install --no-install-recommends -y \
-        curl \
-        build-essential
-RUN curl -sSL https://install.python-poetry.org | python3 -
-
-WORKDIR $PYSETUP_PATH
-COPY ./poetry.lock ./pyproject.toml ./
-RUN poetry install --only main
-
-FROM builder-base as test
-
-COPY --from=builder-base $VENV_PATH $VENV_PATH
-
-COPY . /app
+# Set the working directory in the container
 WORKDIR /app
 
-RUN poetry install --only dev
-RUN pip install --upgrade nox
-RUN poetry run nox
+# Copy the requirements file into the container at /app
+COPY requirements.txt .
 
-FROM python-base as runtime
+# Install the dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-COPY --from=builder-base $VENV_PATH $VENV_PATH
+# Copy the rest of the application code to /app
+COPY . .
 
-COPY ./docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
+# Expose the port that the app runs on
+EXPOSE 5000
 
-COPY ./bots /app/bots
-WORKDIR /app
+# Define environment variables
+ENV FLASK_APP=bots/api.py
+ENV FLASK_RUN_HOST=0.0.0.0
+ENV FLASK_DEBUG=1
 
-ENTRYPOINT /docker-entrypoint.sh $0 $@
-
-CMD [ "python", "-m", "bots.__main__"]
+# Run the Flask server
+CMD ["flask", "run"]

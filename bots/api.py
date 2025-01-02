@@ -1,10 +1,21 @@
-from quart import Quart, jsonify, request
+from flask import Flask, jsonify, request
+import asyncio
+from functools import wraps
 from .data import Token, Price, LiquidityPool, LiquidityPoolEpoch
 from .settings import TOKEN_ADDRESS, STABLE_TOKEN_ADDRESS, PROTOCOL_NAME
 
-app = Quart(__name__)
+app = Flask(__name__)
+loop = asyncio.new_event_loop()
+asyncio.set_event_loop(loop)
+
+def async_route(f):
+    @wraps(f)
+    def wrapped(*args, **kwargs):
+        return asyncio.run_coroutine_threadsafe(f(*args, **kwargs), loop).result()
+    return wrapped
 
 @app.route('/api/price', methods=['GET'])
+@async_route
 async def get_price():
     token = await Token.get_by_token_address(TOKEN_ADDRESS)
     [token_price] = await Price.get_prices([token])
@@ -15,6 +26,7 @@ async def get_price():
     })
 
 @app.route('/api/tvl', methods=['GET'])
+@async_route
 async def get_tvl():
     pools = await LiquidityPool.get_pools()
     tvl = await LiquidityPool.tvl(pools)
@@ -26,6 +38,7 @@ async def get_tvl():
     })
 
 @app.route('/api/fees', methods=['GET'])
+@async_route
 async def get_fees():
     pools = await LiquidityPool.get_pools()
     fees = sum(map(lambda p: p.total_fees, pools))
@@ -36,6 +49,7 @@ async def get_fees():
     })
 
 @app.route('/api/rewards', methods=['GET'])
+@async_route
 async def get_rewards():
     lpes = await LiquidityPoolEpoch.fetch_latest()
     fees = sum(map(lambda lpe: lpe.total_fees, lpes))
@@ -48,6 +62,7 @@ async def get_rewards():
     })
 
 @app.route('/api/pools', methods=['GET'])
+@async_route
 async def get_pools():
     pools = await LiquidityPool.get_pools()
     return jsonify([{
@@ -77,6 +92,7 @@ async def get_pools():
     } for pool in pools])
 
 @app.route('/api/pools/<address>', methods=['GET'])
+@async_route
 async def get_pool(address):
     pool = await LiquidityPool.by_address(address)
     if not pool:
@@ -119,6 +135,7 @@ async def get_pool(address):
     })
 
 @app.route('/api/pools/search', methods=['GET'])
+@async_route
 async def search_pools():
     query = request.args.get('q', '')
     limit = int(request.args.get('limit', '10'))
@@ -142,4 +159,4 @@ async def search_pools():
     } for pool in pools])
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5001) 
+    app.run(debug=True, port=5000) 
