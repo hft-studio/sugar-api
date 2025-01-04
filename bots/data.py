@@ -21,6 +21,7 @@ from .settings import (
     GOOD_ENOUGH_PAGINATION_LIMIT,
     POOL_PAGE_SIZE,
     PRICE_THRESHOLD_FILTER,
+    ADDITIONAL_TOKEN_ADDRESSES,
 )
 from .helpers import cache_in_seconds, normalize_address, chunk
 
@@ -64,7 +65,10 @@ class Token:
     async def get_all_tokens(cls) -> List["Token"]:
         sugar = w3.eth.contract(address=LP_SUGAR_ADDRESS, abi=LP_SUGAR_ABI)
         tokens = await sugar.functions.tokens(
-            GOOD_ENOUGH_PAGINATION_LIMIT, 0, ADDRESS_ZERO, []
+            GOOD_ENOUGH_PAGINATION_LIMIT, 
+            0, 
+            ADDRESS_ZERO, 
+            ADDITIONAL_TOKEN_ADDRESSES
         ).call()
         return list(map(lambda t: Token.from_tuple(t), tokens))
 

@@ -44,6 +44,13 @@ CONNECTOR_TOKENS_ADDRESSES = list(
         os.environ["CONNECTOR_TOKENS_ADDRESSES"].split(","),
     )
 )
+# additional tokens to include in the token list
+ADDITIONAL_TOKEN_ADDRESSES = list(
+    map(
+        lambda a: normalize_address(a),
+        os.environ.get("ADDITIONAL_TOKEN_ADDRESSES", "").split(","),
+    )
+) if os.environ.get("ADDITIONAL_TOKEN_ADDRESSES") else []
 
 # how often ticker bots update
 BOT_TICKER_INTERVAL_MINUTES = int(os.environ["BOT_TICKER_INTERVAL_MINUTES"])
