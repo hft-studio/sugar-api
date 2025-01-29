@@ -1,4 +1,4 @@
-(We are using this fork of the velodrome bots repo we added a Flask api to it)
+(We are using this fork of the Velodrome bots repo we added a Flask api to it)
 
 
 # 🤖 Velodrome and Aerodrome Discord Bots
