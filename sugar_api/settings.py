@@ -44,8 +44,6 @@ ADDITIONAL_TOKEN_ADDRESSES = list(
     )
 ) if os.environ.get("ADDITIONAL_TOKEN_ADDRESSES") else []
 
-# how often ticker bots update
-BOT_TICKER_INTERVAL_MINUTES = int(os.environ["BOT_TICKER_INTERVAL_MINUTES"])
 # caching time for sugar tokens calls
 SUGAR_TOKENS_CACHE_MINUTES = int(os.environ["SUGAR_TOKENS_CACHE_MINUTES"])
 # caching time for sugar liquidity pools calls
