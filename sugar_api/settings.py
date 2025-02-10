@@ -11,14 +11,6 @@ load_dotenv()
 LP_SUGAR_ABI = load_local_json_as_string("abi/lp_sugar.json")
 PRICE_ORACLE_ABI = load_local_json_as_string("abi/price_oracle.json")
 
-# auth tokens for bots
-# grab them at https://discord.com/developers/applications
-DISCORD_TOKEN_PRICING = os.environ.get("DISCORD_TOKEN_PRICING")
-DISCORD_TOKEN_TVL = os.environ.get("DISCORD_TOKEN_TVL")
-DISCORD_TOKEN_FEES = os.environ.get("DISCORD_TOKEN_FEES")
-DISCORD_TOKEN_REWARDS = os.environ.get("DISCORD_TOKEN_REWARDS")
-DISCORD_TOKEN_COMMANDER = os.environ.get("DISCORD_TOKEN_COMMANDER")
-
 # RPC gateway
 WEB3_PROVIDER_URI = os.environ["WEB3_PROVIDER_URI"]
 LP_SUGAR_ADDRESS = os.environ["LP_SUGAR_ADDRESS"]
@@ -52,8 +44,6 @@ ADDITIONAL_TOKEN_ADDRESSES = list(
     )
 ) if os.environ.get("ADDITIONAL_TOKEN_ADDRESSES") else []
 
-# how often ticker bots update
-BOT_TICKER_INTERVAL_MINUTES = int(os.environ["BOT_TICKER_INTERVAL_MINUTES"])
 # caching time for sugar tokens calls
 SUGAR_TOKENS_CACHE_MINUTES = int(os.environ["SUGAR_TOKENS_CACHE_MINUTES"])
 # caching time for sugar liquidity pools calls
@@ -66,6 +56,3 @@ GOOD_ENOUGH_PAGINATION_LIMIT = 2000
 
 # pagination limit for pools
 POOL_PAGE_SIZE = 500
-
-# image shown on discord embeds for pool stats
-UI_POOL_STATS_THUMBNAIL = os.environ["UI_POOL_STATS_THUMBNAIL"]

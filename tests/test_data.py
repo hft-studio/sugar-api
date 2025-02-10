@@ -4,8 +4,8 @@ from dotenv import load_dotenv
 
 load_dotenv(".env.example")
 
-from bots.settings import TOKEN_ADDRESS  # noqa
-from bots.data import Token, Price, LiquidityPool, LiquidityPoolEpoch  # noqa
+from sugar_api.settings import TOKEN_ADDRESS  # noqa
+from sugar_api.data import Token, Price, LiquidityPool, LiquidityPoolEpoch  # noqa
 
 
 @pytest.mark.asyncio

@@ -1,62 +1,52 @@
-(We are using this fork of the Velodrome bots repo we added a Flask api to it)
+# Sugar API
 
+Sugar API is a FastAPI-based service that provides easy access to Velodrome/Aerodrome DeFi protocol data through the Sugar contract. It offers endpoints for retrieving pool statistics, token prices, total value locked (TVL), fees, and rewards data from the blockchain.
 
-# 🤖 Velodrome and Aerodrome Discord Bots
+## Features
 
-## Table of Contents
+- **Pool Data**: Get detailed information about liquidity pools including reserves, fees, APR, and volume
+- **Price Oracle**: Access token prices using the protocol's price oracle
+- **TVL Tracking**: Monitor total value locked across all pools
+- **Fee Analytics**: Track protocol fees and rewards
+- **Pool Search**: Search functionality to find specific pools by symbol or address
 
-- [Meet the Bots](#meet-the-bots)
-- [Pre reqs](#pre-reqs)
-- [Running locally](#running-locally)
-- [Before you push](#before-you-push)
-- [Setting up Bots on Discord](#setting-up-bots-on-discord)
+## API Endpoints
 
-## Meet the Bots
+- `/api/price` - Get current token price
+- `/api/pools` - List all pools
+- `/api/pools/{address}` - Get detailed stats for specific pool
+- `/api/pools/search` - Search pools by query
+- `/api/tvl` - Get protocol's total value locked
+- `/api/fees` - Get protocol's fee data
+- `/api/rewards` - Get protocol's rewards data
 
-- Commander bot: shows pool stats via `/pool` command
-- Fees bot: shows total fees accross all the pools
-- Price bot: shows target token price in stable coin
-- Rewards bot: shows rewards, fees and incentives for the latest epoch
-- TVL bot: shows total value locked across all the pools
+## Setup
 
-## Pre reqs
+1. Copy `.env.example` to `.env` and configure your environment variables
+2. Install dependencies: `pip install -r requirements.txt`
+3. Run the API: `python run.py`
 
-- [Sugar](https://github.com/velodrome-finance/sugar)
-- [Oracle, Velodrome Release](https://github.com/1inch/spot-price-aggregator)
-- [Poetry](https://python-poetry.org/)
-- [Nox](https://nox.thea.codes/en/stable/)
+## Environment Variables
 
-## Running locally
+Key configuration variables:
+- `WEB3_PROVIDER_URI`: RPC endpoint for the blockchain
+- `LP_SUGAR_ADDRESS`: Address of the Sugar contract
+- `PRICE_ORACLE_ADDRESS`: Address of the Price Oracle contract
+- `TOKEN_ADDRESS`: Protocol token address
+- `STABLE_TOKEN_ADDRESS`: Stable coin address for price calculations
 
-- `cp .env.example .env`
-- set `DISCORD_TOKEN_*` for your bot/bots
-- `poetry install`
-- `poetry run python -m bots.__main__`
+## Docker
 
-## Before you push
-
+Build and run with Docker:
 ```bash
-poetry run nox
+docker build -t sugar-api .
+docker run -p 5000:5000 sugar-api
 ```
 
-Got issues with formatting?
+## Contributing
 
-```bash
-poetry run nox -rs black
-```
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-## Setting up Bots on Discord
+## License
 
-- head to [Discord Developer Portal](https://discord.com/developers/applications)
-- click `New Application` (top right corner)
-- come up with a sensible name for the bot, accept TOS, click `Create`
-- click `Bot` in the left hand side panel
-- for command bots, enable `MESSAGE CONTENT INTENT`
-- click `Reset Token`
-- copy newly created token and keep it to share with your trusted dev
-- click `OAuth2` in the left had side panel
-- click `URL Generator` in the sub menu
-- in `Scopes`, select `bot`
-- in `Bot Permissions`, select `Change Nickname`; for `Command` bot select `Send Messages` and `Use Slash Commands`
-- copy `Generated URL` and open it in a new tab to add bot to your server
-- upload emojis from [emojis directory](https://github.com/velodrome-finance/bots/tree/main/emojis) to your discord server (`Server Settings > Emoji`) - these are used to build custom Discord Embed UIs
+This project is licensed under the GNU General Public License v3.0
