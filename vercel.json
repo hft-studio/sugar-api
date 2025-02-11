@@ -1,0 +1,14 @@
+{
+  "builds": [
+    {
+      "src": "sugar_api/api.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "sugar_api/api.py"
+    }
+  ]
+}
