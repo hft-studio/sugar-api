@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # Use the official Python image from the Docker Hub
 FROM python:3.10-slim
 
@@ -21,3 +23,7 @@ EXPOSE 5000
 
 # Run the FastAPI server with Uvicorn
 CMD ["uvicorn", "sugar_api.api:app", "--host", "0.0.0.0", "--port", "5000"]
+
+# Use this instead to deploy the app on aws on port 80:
+# ENTRYPOINT ["uvicorn"]
+# CMD ["sugar_api.api:app", "--host", "0.0.0.0", "--port", "80"]
